@@ -64,7 +64,7 @@ git checkout dev
 ```
 3- Create .env file (based on .env.example).
 
-4- Install dependencies by using pip install -r requirements.txt.
+4- Install dependencies by using pip install -r requirements.txt or uv pip install -r requiremnets.txt
 
 5- Run backend (FastAPI or Flask).
 
