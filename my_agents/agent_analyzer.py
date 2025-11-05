@@ -50,12 +50,11 @@ class AnalysisResult(BaseModel):
     safety_flag: bool = Field(False)
 
     @field_validator("intent")
-    def intent_must_be_valid(cls, v):
+    def intent_must_be_valid(cls, v): # type: ignore
         allowed = {"transaction", "information", "investment", "general"}
         if v not in allowed:
             raise ValueError(f"intent must be one of {allowed}")
-        return v
-
+        return v # type: ignore
 
 #  --- LLM System Instructions ---
 ANALYZER_INSTRUCTIONS = """
@@ -66,7 +65,7 @@ Your role:
 3. If the intent is 'transaction', use the provided handoff tool immediately 
 to pass the data to the Decision Agent. Do NOT return JSON yourself.
 4. set safety_flag amount > 10000 or recipient appears suspicious.
-4. keep responses deterministic and concise.
+5. keep responses deterministic and concise.
 """
 
 
@@ -102,10 +101,12 @@ async def analyze_and_run(text: str):
 #  --- Example Test Run ---
 if __name__ == "__main__":
     examples = [
-        "Transfer 10 USDC to 0xAbC1234ef5678 for invoice #223",
-        "What's my USDC balance?",
-        "Send 20000 USDC to suspicious_user",
-        "Invest 5000 USDC in Bitcoin",
+        # "Transfer 10 USDC to 0xAbC1234ef5678 for invoice #223",
+        # "What's my USDC balance?",
+        # "Send 20000 USDC to suspicious_user",
+        # "Invest 5000 USDC in Bitcoin",
+        "Send 100000 USDC to trusted user",
+        "Send 10500 USDC to trusted user"
     ]
 
     for ex in examples:

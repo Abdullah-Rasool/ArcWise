@@ -25,4 +25,9 @@ class DecisionHandoffPayload(HandoffPayload):
      source_agent: str = "Decision Agent"
      decision: str
      next_action: Optional[str]
-    
+
+class ValidatorHandoffPayload(HandoffPayload):
+     """Used for passing Validator Agent’s output to the Executor Agent."""
+     source_agent: str = "Validator Agent"
+     decision: str
+     next_action: Optional[str]

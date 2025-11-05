@@ -15,7 +15,8 @@ from pydantic import BaseModel,Field,field_validator
 from typing import Optional
 import asyncio
 from dotenv import load_dotenv
-from my_agents.handoff_shared_schema import DecisionHandoffPayload
+from my_agents.handoff_shared_schema import DecisionHandoffPayload,ValidatorHandoffPayload
+from my_agents.agent_validator import decision_to_validator_handoff
 from utils.logger import logger
 
 
@@ -62,7 +63,15 @@ async def handle_decision_to_executor(ctx:RunContextWrapper[None],input_data:Dec
 
     if ctx.context is None:
         ctx.context = {}
-        ctx.context["handoff_data"] = input_data.model_dump()   # store as dict, not JSON string
+        ctx.context["handoff_data"] = input_data.model_dump()   # type: ignore # store as dict, not JSON string
+        return
+    
+async def handle_validator_to_executor(ctx:RunContextWrapper[None],input_data:ValidatorHandoffPayload):
+    logger.info(f"💼 Received approved handoff from {input_data.source_agent}")
+
+    if ctx.context is None:
+        ctx.context = {} # type: ignore
+        ctx.context["handoff_data"] = input_data.model_dump()   # type: ignore # store as dict, not JSON string
         return
         
    
@@ -70,6 +79,12 @@ decision_to_executor_handoff = handoff(
     agent=executor_agent,
     on_handoff=handle_decision_to_executor,
     input_type=DecisionHandoffPayload,
+)
+
+validator_to_executor_handoff = handoff(
+    agent=executor_agent,
+    on_handoff=handle_validator_to_executor,
+    input_type=ValidatorHandoffPayload,
 )
 
 

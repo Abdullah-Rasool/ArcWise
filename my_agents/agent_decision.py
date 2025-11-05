@@ -14,6 +14,7 @@ import os
 from dotenv import load_dotenv
 from my_agents.handoff_shared_schema import DecisionHandoffPayload, HandoffPayload
 from my_agents.agent_executor import decision_to_executor_handoff
+from my_agents.agent_validator import decision_to_validator_handoff
 from utils.logger import logger
 
 
@@ -74,6 +75,7 @@ decision_agent = Agent(
     output_type=DecisionResult,
     handoffs=[
         decision_to_executor_handoff,
+        decision_to_validator_handoff,  
     ],
     model_settings= ModelSettings(
         temperature = 0.0,
@@ -95,6 +97,7 @@ analyzer_to_decision_handoff = handoff(
     on_handoff=handle_handoff_payload,
     input_type=HandoffPayload
 )
+
 
 
 
